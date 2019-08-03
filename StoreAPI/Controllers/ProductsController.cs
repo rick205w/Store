@@ -12,10 +12,22 @@ namespace StoreAPI.Controllers
     public class ProductsController : ApiController
     {
         [HttpGet]
-        public IEnumerable<ProductViewModel> Get()
+        public IEnumerable<ProductViewModel> Get([FromUri] ProductQueryViewModel query)
         {
             var result = new List<ProductViewModel>();
             var datas = DataRepository.GetDatas();
+            if (query != null)
+            {
+                var shop = datas.FirstOrDefault(o => o.Id == query.ShopId);
+                result = shop?.Products.Select(o => new ProductViewModel()
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    Price = o.Price
+                }).ToList();
+                return result;
+            }
+
             datas.ForEach(s =>
             {
                 s.Products.ForEach(p =>
