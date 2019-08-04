@@ -15,7 +15,7 @@ namespace StoreAPI.Controllers
         public IEnumerable<ProductViewModel> Get([FromUri] ProductQueryViewModel query)
         {
             var result = new List<ProductViewModel>();
-            var datas = DataRepository.GetDatas();
+            var datas = DataRepository.GetData();
             if (query != null)
             {
                 var shop = datas.FirstOrDefault(o => o.Id == query.ShopId);
@@ -42,6 +42,12 @@ namespace StoreAPI.Controllers
                 });
             });
             return result;
+        }
+
+        [HttpPost]
+        public void Post(CreateProductsViewModel model)
+        {
+            DataRepository.AddProducts(model);
         }
     }
 }

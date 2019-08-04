@@ -14,7 +14,7 @@ namespace StoreAPI.Controllers
         [HttpGet]
         public IEnumerable<ShopViewModel> Get()
         { 
-            var datas = DataRepository.GetDatas();
+            var datas = DataRepository.GetData();
             var result = datas.Select(o => new ShopViewModel()
             {
                 Id = o.Id,

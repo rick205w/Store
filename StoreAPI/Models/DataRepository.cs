@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using StoreAPI.ViewModels;
 
 namespace StoreAPI.Models
 {
     static class DataRepository
     {
-        public static List<Shop> GetDatas()
+        private static List<Shop> Data = new List<Shop>()
         {
-            var result = new List<Shop>();
-            var wastonsShop = new Shop()
+            new Shop()
             {
                 Id = 1,
                 Name = "Wastons",
@@ -19,7 +20,6 @@ namespace StoreAPI.Models
                         Name = "歐芮坦 細柔抽取式衛生紙 100抽10包入",
                         Price = 79
                     },
-
                     new Product()
                     {
                         Id = 2,
@@ -33,9 +33,8 @@ namespace StoreAPI.Models
                         Price = 109
                     }
                 }
-            };
-            result.Add(wastonsShop);
-            var cosmedShop = new Shop()
+            },
+            new Shop()
             {
                 Id = 2,
                 Name = "Cosmed",
@@ -61,9 +60,31 @@ namespace StoreAPI.Models
                         Price = 99
                     }
                 }
-            };
-            result.Add(cosmedShop);
-            return result;
+            }
+        };
+
+        public static List<Shop> GetData()
+        {
+            return Data;
+        }
+
+        public static void AddProducts(CreateProductsViewModel model)
+        {
+            var shop = Data.FirstOrDefault(o => o.Id == model.ShopId);
+            model.Products.ForEach(o =>
+            {
+                var newProduct = new Product()
+                {
+                    Name = o.Name,
+                    Price = o.Price,
+                    Id = 1 + Data.Max(s =>
+                    {
+                        int maxId = s.Products.Max(x => x.Id);
+                        return maxId;
+                    })
+                };
+                shop.Products.Add(newProduct);
+            });
         }
     }
 }
